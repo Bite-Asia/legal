@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bite · Signing you in</title>
+<style>
+  body { margin: 0; background: #B5D334; color: #43301E; font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 480px; margin: 0 auto; padding: 72px 22px; text-align: center; }
+  .brand { font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+  h1 { font-size: 30px; line-height: 1.1; letter-spacing: -1px; margin: 8px 0 12px; }
+  a { color: #43301E; font-weight: 700; }
+</style>
+</head>
+<body>
+<main>
+<div class="brand">Bite</div>
+<h1>Signing you in</h1>
+<p id="msg">One moment.</p>
+</main>
+<script>
+// Hands a sign-in back to the app while it runs in Expo Go.
+// Supabase will not redirect to an address with a bare IP, which is
+// what Expo Go's exp:// addresses are. So the app sends Supabase here
+// with ?to=<its exp:// address>, Supabase appends the session in the
+// hash, and this page forwards both to the app. Only exp:// and bite://
+// targets are honoured, so this page cannot be used to send a session
+// anywhere else.
+(function () {
+  var to = new URLSearchParams(location.search).get('to') || '';
+  var ok = /^(exp|bite):\/\//.test(to);
+  var msg = document.getElementById('msg');
+  if (!ok) { msg.textContent = 'Open the Bite app and try again.'; return; }
+  var target = to + (to.indexOf('#') === -1 ? location.hash : '');
+  location.replace(target);
+  setTimeout(function () {
+    msg.innerHTML = 'If nothing happened, <a href="' + target.replace(/"/g, '') + '">tap here</a>.';
+  }, 1500);
+})();
+</script>
+</body>
+</html>
